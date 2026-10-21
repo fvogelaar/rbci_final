@@ -1,0 +1,6 @@
+pygame
+pylsl==1.16.2
+numpy
+scikit-learn
+pyxdf
+pandas
