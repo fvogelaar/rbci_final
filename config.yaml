@@ -1,0 +1,25 @@
+# config.yaml
+
+experiment:
+  conditions: ["LEFT", "RIGHT"]
+  startup_delay_seconds: 7
+
+timing:
+  fixation_seconds: 2.0
+  post_beep_seconds: 0.5
+  cue_seconds: 1.0
+  imagery_seconds: 4.5
+  iti_range_seconds: [0.5, 2.5]
+
+beep:
+  frequency_hz: 1000
+  duration_ms: 500
+
+streams:
+  marker:
+    name: "MotorImageryMarkers"
+    type: "Markers"
+  features:
+    type: "EEG_FEATURES"
+  predictions:
+    type: "BCI_PREDICTION"
