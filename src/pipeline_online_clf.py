@@ -4,9 +4,9 @@ Real-time classification pipeline
 
 import time
 from pylsl import StreamInlet, resolve_stream, StreamOutlet, StreamInfo
-from src.classifier import OnlineLDA
 from src.metrics import OnlineMetrics
 from examples.train_offline import offline_trainer
+
 
 def online_classification(stop_event):
     streams = resolve_stream("type", "EEG_FEATURES")
@@ -23,10 +23,9 @@ def online_classification(stop_event):
     )
 
     prediction_outlet = StreamOutlet(prediction_info)
-
-    cal_model = offline_trainer()     # this runs the offline training with calibration file
+    # this runs the offline training with calibration file
+    cal_model = offline_trainer()
     metrics = OnlineMetrics()
-
 
     try:
         while not stop_event.is_set():
@@ -34,16 +33,17 @@ def online_classification(stop_event):
             feature, _ = inlet.pull_sample()
 
             y = cal_model.predict(feature)
-            #probabilities = cal_model.pred_probability(feature)
+            # probabilities = cal_model.pred_probability(feature)
             prediction_outlet.push_sample([y])
-            
+
             if y is not None:
                 metrics.log_latency(t0)
-                print("Prediction:", y,
-                    "Mean latency:", metrics.mean_latency())
-    
+                # print("Prediction:", y,
+                    # "Mean latency:", metrics.mean_latency())
+
     finally:
         inlet.close_stream()
+
 
 if __name__ == "__main__":
     online_classification()
