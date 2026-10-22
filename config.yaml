@@ -2,7 +2,7 @@
 
 experiment:
   conditions: ["LEFT", "RIGHT"]
-  startup_delay_seconds: 7
+  startup_delay_seconds: 0
 
 timing:
   fixation_seconds: 2.0
@@ -22,4 +22,6 @@ streams:
   features:
     type: "EEG_FEATURES"
   predictions:
+    name: "MotorImageryPredictions"
     type: "BCI_PREDICTION"
+    source_id: "motor-imagery-predictions"

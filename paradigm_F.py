@@ -73,6 +73,7 @@ def run_motor_imagery_paradigm(outlet, config, total_trials=1):
         time.sleep(iti_seconds)
         # time = 8.5 - 10.5 s
 
+
 def simulation(num_trials):
     # load config
     config_path = Path(__file__).resolve().parent / "config.yaml"
@@ -103,10 +104,10 @@ def simulation(num_trials):
     # intiate clf thread (this produces BCI_PREDICTION type stream)
     clf_thread = threading.Thread(
             target=online_classification,
-            args=(stop_event,),
+            args=(stop_event, config, cal_clf),
             kwargs={},
             )
-    
+
     clf_thread.start()
 
     feedback_thread = threading.Thread(
@@ -114,10 +115,10 @@ def simulation(num_trials):
                 args=(stop_event,),
                 kwargs={},
                 )
-        
+
     feedback_thread.start()
 
-    time.sleep(7)
+    time.sleep(config["experiment"]["startup_delay_seconds"])
     # Start experiment.
     try:
         run_motor_imagery_paradigm(
@@ -138,70 +139,71 @@ def simulation(num_trials):
 
 def unicorn(num_trials):
     # load config
-        config_path = Path(__file__).resolve().parent / "config.yaml"
-        config = load_config(config_path)
-    
-        # Initialize the marker stream first
-        marker_outlet = create_marker_outlet(config)
-    
-        print("LSL Marker Outlet initialized: 'MotorImageryMarkers'")
-    
-        # Linking to LabRecorder
-        print("0. Start Unicorn Recorder and run the paradigm code.")
-        print("\n1. Open LSL LabRecorder.")
-        print("2. Click 'Update' and ensure both 'Unicorn' and 'MotorImageryMarkers' are visible.")
-        print("3. Select both streams and click 'Start' to begin recording.")
-    
-        input("\n--> Press ENTER in this terminal once LabRecorder is recording to start the task...")
-    
-        stop_event = threading.Event()
-    
-        # Turn on feature streaming (EEG_FEATURES type stream)
-        # based on the stream you want
-        # Non-blocking implementation using threading
-        feature_thread = threading.Thread(
-            target=publish_online_features,
-            args=(stop_event,),
-            kwargs={"simulation": False},
+    config_path = Path(__file__).resolve().parent / "config.yaml"
+    config = load_config(config_path)
+
+    # Initialize the marker stream first
+    marker_outlet = create_marker_outlet(config)
+
+    print("LSL Marker Outlet initialized: 'MotorImageryMarkers'")
+
+    # Linking to LabRecorder
+    print("0. Start Unicorn Recorder and run the paradigm code.")
+    print("\n1. Open LSL LabRecorder.")
+    print("2. Click 'Update' and ensure both 'Unicorn' and 'MotorImageryMarkers' are visible.")
+    print("3. Select both streams and click 'Start' to begin recording.")
+
+    input("\n--> Press ENTER in this terminal once LabRecorder is recording to start the task...")
+
+    stop_event = threading.Event()
+
+    # Turn on feature streaming (EEG_FEATURES type stream)
+    # based on the stream you want
+    # Non-blocking implementation using threading
+    feature_thread = threading.Thread(
+        target=publish_online_features,
+        args=(stop_event,),
+        kwargs={"simulation": False},
+        )
+    feature_thread.start()
+
+    # intiate clf thread (this produces BCI_PREDICTION type stream)
+    clf_thread = threading.Thread(
+            target=online_classification,
+            args=(stop_event, config, cal_clf),
+            kwargs={},
             )
-        feature_thread.start()
-    
-        # intiate clf thread (this produces BCI_PREDICTION type stream)
-        clf_thread = threading.Thread(
-                target=online_classification,
+
+    clf_thread.start()
+
+    feedback_thread = threading.Thread(
+                target=closed_loop_fb,
                 args=(stop_event,),
                 kwargs={},
                 )
-        
-        clf_thread.start()
-    
-        feedback_thread = threading.Thread(
-                    target=closed_loop_fb,
-                    args=(stop_event,),
-                    kwargs={},
-                    )
-            
-        feedback_thread.start()
-    
-        time.sleep(7)
-        # Start experiment.
-        try:
-            run_motor_imagery_paradigm(
-                marker_outlet,
-                config,
-                total_trials=num_trials,
-            )
-    
-        # Final block runs also when we get an error before
-        # To make sure extraction stops
-        finally:
-            # Stop feature extraction when the experiment finishes
-            # So completing the total_trials is the stop_event for
-            # feature extraction and for the optional simulation stream
-            stop_event.set()
-            feature_thread.join()
+
+    feedback_thread.start()
+
+    time.sleep(config["experiment"]["startup_delay_seconds"])
+    # Start experiment.
+    try:
+        run_motor_imagery_paradigm(
+            marker_outlet,
+            config,
+            total_trials=num_trials,
+        )
+
+    # Final block runs also when we get an error before
+    # To make sure extraction stops
+    finally:
+        # Stop feature extraction when the experiment finishes
+        # So completing the total_trials is the stop_event for
+        # feature extraction and for the optional simulation stream
+        stop_event.set()
+        feature_thread.join()
 
 
 if __name__ == '__main__':
+    cal_clf = offline_trainer()
     simulation(num_trials=2)
     # unicorn(num_trials=2)
