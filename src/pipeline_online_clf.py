@@ -8,23 +8,25 @@ from src.metrics import OnlineMetrics
 from examples.train_offline import offline_trainer
 
 
-def online_classification(stop_event):
-    streams = resolve_stream("type", "EEG_FEATURES")
+def online_classification(stop_event, config, cal_clf):
+    stream_settings = config["streams"]
+    streams = resolve_stream("type", stream_settings["features"]["type"])
     inlet = StreamInlet(streams[0])
 
     # create outlet for BCI_PREDICTION probabilities
     prediction_info = StreamInfo(
-        name="MotorImageryPredictions",
-        type="BCI_PREDICTION",
+        name=stream_settings["predictions"]["name"],
+        type=stream_settings["predictions"]["type"],
         channel_count=1,
         nominal_srate=0,
         channel_format="float32",
-        source_id="motor-imagery-predictions",
+        source_id=stream_settings["predictions"]["source_id"],
     )
 
     prediction_outlet = StreamOutlet(prediction_info)
+    cal_model = cal_clf
     # this runs the offline training with calibration file
-    cal_model = offline_trainer()
+    # cal_model = offline_trainer()
     metrics = OnlineMetrics()
 
     try:
