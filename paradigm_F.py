@@ -205,5 +205,5 @@ def unicorn(num_trials):
 
 if __name__ == '__main__':
     cal_clf = offline_trainer()
-    simulation(num_trials=2)
+    simulation(num_trials=6)
     # unicorn(num_trials=2)
