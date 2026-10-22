@@ -21,13 +21,13 @@ def offline_trainer():
         # print("Constructed X and y matrices")
         '''
         features = extract_offline_features(
-            in_path="data/xdf_files/matthijs_data_50.xdf",
+            in_path="data/xdf_files/matthijs_data_100.xdf",
             out_path="data/csv_files/calibration_matthijs.csv")
         print("Labeled the features.")
         
         X,y = extract_y_labels(
             csv_path = "data/csv_files/calibration_matthijs.csv",
-            in_path="data/xdf_files/matthijs_data_50.xdf")
+            in_path="data/xdf_files/matthijs_data_100.xdf")
         
         print("Constructed X and y matrices")
         #'''
