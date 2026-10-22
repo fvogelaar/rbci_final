@@ -36,10 +36,12 @@ class OnlineLDA:
         # Match each probability to its actual class label
         # we access the model's 'classes' attribute that sklearn makes
         by_label = dict(zip(self.model.classes_, probabilities))
-
-        return [
+        
+        result = [
             float(by_label["LEFT"]),
             float(by_label["RIGHT"]),]
+        
+        return result
 
     # Addition: crossvalidation
     def evaluate_lda_cv(self, X, y, n_splits=5, random_state=42):

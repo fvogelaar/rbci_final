@@ -34,8 +34,12 @@ def online_classification(stop_event, config, cal_clf):
             t0 = time.time()
             feature, _ = inlet.pull_sample()
 
-            y = cal_model.predict(feature)
-            # probabilities = cal_model.pred_probability(feature)
+            # y = cal_model.predict(feature)
+            probs = cal_model.pred_probability(feature)
+            #print(probs)
+            # feed P(L) into stream
+            y = probs[0]
+            #print(y)
             prediction_outlet.push_sample([y])
 
             if y is not None:
