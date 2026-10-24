@@ -18,7 +18,7 @@ class Controller:
         """
         # if P(Left) = 1.00, target = -1
         # if P(Left) = 0.00, target = +1
-        print(prediction)
+        # print(prediction)
         target = 1 - 2 * prediction
         
         self.state = self.alpha * self.state + (1 - self.alpha) * target

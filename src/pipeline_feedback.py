@@ -7,6 +7,7 @@ from src.feedback import VisualBar
 from src.controller import Controller
 import pygame
 
+
 def closed_loop_fb(stop_event):
     streams = resolve_stream("type", "BCI_PREDICTION")
     inlet = StreamInlet(streams[0])
@@ -32,7 +33,7 @@ def closed_loop_fb(stop_event):
                     break
 
                 latest_y = pred[0]
-                print(latest_y)
+                #print(latest_y)
                 
             if latest_y is not None:
                 value = controller.update(latest_y)
