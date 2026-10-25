@@ -5,6 +5,7 @@ Online-safe classifier wrapper
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
+
 class OnlineLDA:
     def __init__(self):
         self.model = LinearDiscriminantAnalysis()
@@ -17,11 +18,11 @@ class OnlineLDA:
     def predict(self, x):
         if not self.trained:
             return None
-       
+
         label = self.model.predict([x])[0]
         label_to_id = {
             "LEFT": 0,
-            "RIGHT": 1,}
+            "RIGHT": 1, }
 
         return label_to_id[label]
 
@@ -36,11 +37,11 @@ class OnlineLDA:
         # Match each probability to its actual class label
         # we access the model's 'classes' attribute that sklearn makes
         by_label = dict(zip(self.model.classes_, probabilities))
-        
+
         result = [
             float(by_label["LEFT"]),
             float(by_label["RIGHT"]),]
-        
+
         return result
 
     # Addition: crossvalidation
@@ -56,4 +57,3 @@ class OnlineLDA:
         print(f"Mean Accuracy: {scores.mean():.4f} (± {scores.std() * 2:.4f})")
 
         return scores
-

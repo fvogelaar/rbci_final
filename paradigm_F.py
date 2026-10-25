@@ -4,7 +4,6 @@ from pylsl import StreamInfo, StreamOutlet
 import winsound
 import threading
 from src.offl_training.train_offline import offline_trainer
-from simulated_eeg.streamer import stream
 from src.onl_inference.feature_publisher_F import publish_online_features
 from src.feedback_control.pipeline_feedback import closed_loop_fb
 from src.onl_inference.pipeline_online_clf import online_classification
@@ -87,7 +86,10 @@ def simulation(num_trials):
     # Linking to LabRecorder
     print("Run python -m simulated_eeg.streamer in a dedicated terminal")
 
-    input("\n--> Press ENTER in this terminal once streamer is turned on to start the task...")
+    input(
+        "\n--> Press ENTER in this terminal"
+        "once streamer is turned on to start the task..."
+        )
 
     stop_event = threading.Event()
 
@@ -150,10 +152,12 @@ def unicorn(num_trials):
     # Linking to LabRecorder
     print("0. Start Unicorn Recorder and run the paradigm code.")
     print("\n1. Open LSL LabRecorder.")
-    print("2. Click 'Update' and ensure both 'Unicorn' and 'MotorImageryMarkers' are visible.")
+    print("2. Click 'Update' and ensure both 'Unicorn'"
+          "and 'MotorImageryMarkers' are visible.")
     print("3. Select both streams and click 'Start' to begin recording.")
 
-    input("\n--> Press ENTER in this terminal once LabRecorder is recording to start the task...")
+    input("\n--> Press ENTER in this terminal once"
+          "LabRecorder is recording to start the task...")
 
     stop_event = threading.Event()
 
@@ -206,5 +210,4 @@ def unicorn(num_trials):
 if __name__ == '__main__':
     cal_clf = offline_trainer()
     simulation(num_trials=2)
-    #unicorn(num_trials=100)
-
+    # unicorn(num_trials=100)

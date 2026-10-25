@@ -1,29 +1,14 @@
 """
 Utility functions for loading feature datasets
-"""
-
-import numpy as np
-
-def load_csv(path):
-    data = np.loadtxt(path, delimiter=",")
-    X = data[:, 1:-1]
-    y = data[:, -1].astype(int)
-    return X, y
-
-
-
-# From assignment 4
-"""
 Based on loadxdfhelper
 This script loads the data,
 takes the EEG and marker data
 calculates bandpower features
 and annotates them with the condition
-at that timestamp 
-(or if no condition present, then the last 
+at that timestamp
+(or if no condition present, then the last
 known condition is annotated)
 """
-
 
 import csv
 import numpy as np
@@ -35,6 +20,13 @@ import pandas as pd
 import os
 from pathlib import Path
 import yaml
+
+
+def load_csv(path):
+    data = np.loadtxt(path, delimiter=",")
+    X = data[:, 1:-1]
+    y = data[:, -1].astype(int)
+    return X, y
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -59,7 +51,7 @@ C4_IDX = CONFIG["windows"]["C4_IDX"]
 def extract_offline_features(in_path, out_path):
     """
     Constructs the data for X from the XDF file.
-    The features with their timestamps are 
+    The features with their timestamps are
     written to a CSV file.
     """
     streams, header = pyxdf.load_xdf(
@@ -72,14 +64,15 @@ def extract_offline_features(in_path, out_path):
     for stream in streams:
         stream_name = stream['info']['name'][0]
 
-        if stream_name == 'UnicornRecorderLSLStream' or stream_name == 'MatthijsEnFrancien':
+        if stream_name in ('UnicornRecorderLSLStream', 'MatthijsEnFrancien'):
             eeg_stream = stream
             # stop searching when you encounter the eeg stream
             break
 
     if eeg_stream is None:
         raise RuntimeError(
-            "UnicornRecorderLSLStream or MatthijsEnFrancien not found in the XDF."
+            "UnicornRecorderLSLStream or MatthijsEnFrancien"
+            "not found in the XDF."
         )
 
     eeg_data = np.array(
@@ -102,7 +95,7 @@ def extract_offline_features(in_path, out_path):
 
     # print(f"Selected EEG stream: {eeg_stream['info']['name'][0]}")
     # print(f"Recorded samples: {len(eeg_data)}")
-    
+
     # online filtering
     eeg_data = eeg_data[:, :N_CHANNELS]     # reshape to delete the 9th channel
     online_filter = OnlineBandpass(fs, 8, 30, N_CHANNELS)
@@ -157,17 +150,17 @@ def extract_offline_features(in_path, out_path):
 def extract_y_labels(csv_path, in_path):
     """
     Derives the y_labels corresponding to the features
-    at each timestamp. Must be run AFTER extracting 
+    at each timestamp. Must be run AFTER extracting
     features.
-    In the function arguments, csv_path is equal to the out_path 
+    In the function arguments, csv_path is equal to the out_path
     of function extract_offline_features out_path.
     """
 
     project_root = Path(__file__).resolve().parents[2]
     csv_path = project_root / csv_path
     in_path = project_root / in_path
-    #print(csv_path)
-    #print(in_path)
+    # print(csv_path)
+    # print(in_path)
 
     # If there is no previous recording, return
     if not os.path.exists(csv_path) or not os.path.exists(in_path):
@@ -206,7 +199,7 @@ def extract_y_labels(csv_path, in_path):
 
     # Loading features as previously calculated by the feature pipeline
     features = pd.read_csv(csv_path)
-    
+
     X = []
     y = []
 

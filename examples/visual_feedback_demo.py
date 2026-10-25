@@ -1,9 +1,11 @@
 """
 Standalone feedback test
+
+Not our full implementation.
 """
 
 import time
-from src.feedback import VisualBar
+from src.feedback_control.feedback import VisualBar
 
 fb = VisualBar()
 v = 0.0
@@ -15,4 +17,3 @@ while True:
         direction *= -1
     fb.update(v)
     time.sleep(0.02)
-

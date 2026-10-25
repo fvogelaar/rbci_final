@@ -5,7 +5,6 @@ Real-time classification pipeline
 import time
 from pylsl import StreamInlet, resolve_stream, StreamOutlet, StreamInfo
 from src.onl_inference.metrics import OnlineMetrics
-from src.offl_training.train_offline import offline_trainer
 
 
 def online_classification(stop_event, config, cal_clf):
@@ -35,16 +34,16 @@ def online_classification(stop_event, config, cal_clf):
             t0 = time.perf_counter()
             # y = cal_model.predict(feature)
             probs = cal_model.pred_probability(feature)
-            #print(probs)
+            # print(probs)
             # feed P(L) into stream
             y = probs[0]
-            #print(y)
+            # print(y)
             prediction_outlet.push_sample([y])
 
             if y is not None:
                 metrics.log_latency(t0)
                 # print("Prediction:", y,
-                    # "Mean latency:", metrics.mean_latency())
+                #    "Mean latency:", metrics.mean_latency())
     finally:
         metrics.save()
         inlet.close_stream()

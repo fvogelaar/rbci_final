@@ -5,6 +5,7 @@ Simple feature logger
 import csv
 import time
 
+
 class FeatureLogger:
     def __init__(self, filename):
         self.file = open(filename, "w", newline="")
@@ -14,9 +15,9 @@ class FeatureLogger:
     def log(self, features, timestamp=None):
         if timestamp is None:
             timestamp = time.time()
-            
+
         self.writer.writerow([timestamp] + features.tolist())
         self.file.flush()
-    
+
     def close(self):
         self.file.close()

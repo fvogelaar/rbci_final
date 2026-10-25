@@ -4,6 +4,7 @@ Sliding window for streaming EEG samples
 
 import numpy as np
 
+
 class SlidingWindow:
     def __init__(self, size, step):
         self.size = size

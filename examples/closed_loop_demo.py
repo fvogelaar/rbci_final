@@ -1,10 +1,13 @@
 """
 Simulated closed-loop BCI demo
+
+Standalone demo, not our full implementation.
+
 """
 
 import time
-from src.feedback import VisualBar
-from src.controller import Controller
+from src.feedback_control.feedback import VisualBar
+from src.feedback_control.controller import Controller
 
 fb = VisualBar()
 ctrl = Controller()

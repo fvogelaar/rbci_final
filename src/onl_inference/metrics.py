@@ -7,12 +7,13 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
+
 class OnlineMetrics:
     def __init__(self):
         self.times = []
 
     def log_latency(self, t_start):
-        self.times.append(time.perf_counter() - t_start) # use perf_counter
+        self.times.append(time.perf_counter() - t_start)  # use perf_counter
 
     def mean_latency(self):
         if not self.times:
@@ -27,4 +28,3 @@ class OnlineMetrics:
             f.write("latency_s\n")
             for t in self.times:
                 f.write(f"{t}\n")
-

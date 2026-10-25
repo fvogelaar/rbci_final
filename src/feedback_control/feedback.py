@@ -4,6 +4,7 @@ Visual feedback primitives
 
 import pygame
 
+
 class VisualBar:
     def __init__(self, width=500, height=200):
         pygame.init()
@@ -15,7 +16,7 @@ class VisualBar:
         """
         value in [0, 1]
         """
-        pygame.event.pump()  #or pygame.event.get() to process events
+        pygame.event.pump()  # for pygame.event.get() to process events
         value = max(0.0, min(1.0, value))
         self.screen.fill((0, 0, 0))
         bar_width = int(self.width * value)

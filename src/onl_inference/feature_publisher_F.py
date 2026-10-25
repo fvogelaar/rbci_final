@@ -46,18 +46,19 @@ def publish_online_features(stop_event, simulation):
 
     eeg_stream = None
 
-    if simulation == False: 
+    if not simulation:
         # for all connected streams, find the first one called
         # UnicornRecorderLSLStream
         for stream in streams:
-            if stream.name() == "UnicornRecorderLSLStream" or stream.name() == "MatthijsEnFrancien":
+            if stream.name() in ('UnicornRecorderLSLStream',
+                                 'MatthijsEnFrancien'):
                 eeg_stream = stream
                 break
     else:
         # grab the first EEG type stream
         eeg_streams = [
-        stream for stream in streams if stream.type().strip().lower() == "eeg"
-        ]
+            stream for stream in streams if stream.type().strip().lower() == "eeg"
+            ]
         eeg_stream = eeg_streams[0]
 
     if eeg_stream is None:
@@ -79,7 +80,7 @@ def publish_online_features(stop_event, simulation):
 
     inlet = StreamInlet(eeg_stream)     # INLET = Unicorn EEG
 
-    # Create the feature stream. 
+    # Create the feature stream.
     feature_info = StreamInfo(
         name="MotorImageryFeatures",
         type="EEG_FEATURES",
@@ -89,12 +90,14 @@ def publish_online_features(stop_event, simulation):
         source_id="motor-imagery-features",
     )
 
-    feature_outlet = StreamOutlet(feature_info) # OUTLET = features
+    feature_outlet = StreamOutlet(feature_info)  # OUTLET = features
 
     # Uncomment for debugging
     # print(f"Selected EEG stream: {eeg_stream.name()}")
-    # print(f"Publishing {feature_info.channel_count()} channels"
-          # f" to stream of type {feature_info.type()}")
+    # print(
+    #     f"Publishing {feature_info.channel_count()} channels "
+    #     f"to stream of type {feature_info.type()}"
+    # )
 
     # initiate windowing
     window = SlidingWindow(
@@ -110,7 +113,9 @@ def publish_online_features(stop_event, simulation):
 
     LOG_DIR.mkdir(exist_ok=True)    # make the log dir if not already there
     # make a log with the timestamp
-    logger = FeatureLogger(LOG_DIR / f"features_{time.strftime('%Y%m%d_%H%M%S')}.csv")
+    logger = FeatureLogger(
+        LOG_DIR / f"features_{time.strftime('%Y%m%d_%H%M%S')}.csv"
+        )
 
     try:
         while not stop_event.is_set():
@@ -128,8 +133,8 @@ def publish_online_features(stop_event, simulation):
             )
             # apply online filter
             filtered_sample = online_filter.process(sample)
-        
-            # Populate the window with the sample. 
+
+            # Populate the window with the sample.
             win = window.update(filtered_sample)
 
             if win is not None:
@@ -149,11 +154,12 @@ def publish_online_features(stop_event, simulation):
                 # uncomment for debugging
                 # print("Published features:", log_features, flush=True)
                 logger.log(log_features, timestamp)
-    # If anything errors or the recording is finished, 
+    # If anything errors or the recording is finished,
     # close the inlet to stop receiving EEG.
     finally:
         inlet.close_stream()
         logger.close()
+
 
 if __name__ == "__main__":
     import threading
