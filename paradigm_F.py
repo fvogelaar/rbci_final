@@ -3,11 +3,11 @@ import random
 from pylsl import StreamInfo, StreamOutlet
 import winsound
 import threading
-from examples.train_offline import offline_trainer
+from src.offl_training.train_offline import offline_trainer
 from simulated_eeg.streamer import stream
-from src.feature_publisher_F import publish_online_features
-from src.pipeline_feedback import closed_loop_fb
-from src.pipeline_online_clf import online_classification
+from src.onl_inference.feature_publisher_F import publish_online_features
+from src.feedback_control.pipeline_feedback import closed_loop_fb
+from src.onl_inference.pipeline_online_clf import online_classification
 from pathlib import Path
 import yaml
 

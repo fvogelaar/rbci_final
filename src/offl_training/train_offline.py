@@ -2,8 +2,8 @@
 Offline training script
 """
 
-from src.classifier import OnlineLDA
-from src.dataset import extract_offline_features, extract_y_labels  # alternatively, load_csv
+from src.offl_training.classifier import OnlineLDA
+from src.offl_training.dataset import extract_offline_features, extract_y_labels  # alternatively, load_csv
 
 
 def offline_trainer():

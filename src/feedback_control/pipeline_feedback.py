@@ -3,8 +3,8 @@ Closed-loop real-time feedback pipeline
 """
 
 from pylsl import StreamInlet, resolve_stream
-from src.feedback import VisualBar
-from src.controller import Controller
+from src.feedback_control.feedback import VisualBar
+from src.feedback_control.controller import Controller
 import pygame
 
 

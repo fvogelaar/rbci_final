@@ -4,8 +4,8 @@ Real-time classification pipeline
 
 import time
 from pylsl import StreamInlet, resolve_stream, StreamOutlet, StreamInfo
-from src.metrics import OnlineMetrics
-from examples.train_offline import offline_trainer
+from src.onl_inference.metrics import OnlineMetrics
+from src.offl_training.train_offline import offline_trainer
 
 
 def online_classification(stop_event, config, cal_clf):

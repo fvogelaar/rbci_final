@@ -11,9 +11,9 @@ from pylsl import (
     resolve_streams,
 )
 
-from src.window import SlidingWindow
-from src.bandpower import BandPower
-from src.filters import OnlineBandpass
+from src.onl_preprocessing.window import SlidingWindow
+from src.features.bandpower import BandPower
+from src.onl_preprocessing.filters import OnlineBandpass
 
 
 FS = 250

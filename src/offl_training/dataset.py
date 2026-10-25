@@ -28,9 +28,9 @@ known condition is annotated)
 import csv
 import numpy as np
 import pyxdf
-from src.window import SlidingWindow
-from src.bandpower import BandPower
-from src.filters import OnlineBandpass
+from src.onl_preprocessing.window import SlidingWindow
+from src.features.bandpower import BandPower
+from src.onl_preprocessing.filters import OnlineBandpass
 import pandas as pd
 import os
 from pathlib import Path
@@ -151,7 +151,7 @@ def extract_y_labels(csv_path, in_path):
     of function extract_offline_features out_path.
     """
 
-    project_root = Path(__file__).resolve().parent.parent
+    project_root = Path(__file__).resolve().parent.parent.parent
     csv_path = project_root / csv_path
     in_path = project_root / in_path
     #print(csv_path)
