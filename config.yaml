@@ -25,3 +25,11 @@ streams:
     name: "MotorImageryPredictions"
     type: "BCI_PREDICTION"
     source_id: "motor-imagery-predictions"
+
+windows:
+  fs: 250
+  n_channels: 8
+  step: 25
+  size: 250
+  C3_IDX: 1
+  C4_IDX: 3

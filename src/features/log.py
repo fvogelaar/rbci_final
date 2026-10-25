@@ -17,3 +17,6 @@ class FeatureLogger:
             
         self.writer.writerow([timestamp] + features.tolist())
         self.file.flush()
+    
+    def close(self):
+        self.file.close()

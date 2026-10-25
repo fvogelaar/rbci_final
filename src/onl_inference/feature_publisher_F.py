@@ -14,14 +14,29 @@ from pylsl import (
 from src.onl_preprocessing.window import SlidingWindow
 from src.features.bandpower import BandPower
 from src.onl_preprocessing.filters import OnlineBandpass
+from src.features.log import FeatureLogger
+
+from pathlib import Path
+import yaml
+import time
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+LOG_DIR = PROJECT_ROOT / "logs"
 
 
-FS = 250
-N_CHANNELS = 8
-WINDOW_STEP = 25
-WINDOW_SIZE = 250
+def load_config(name="config.yaml"):
+    with open(PROJECT_ROOT / name, "r") as f:
+        return yaml.safe_load(f)
 
-C3_IDX, C4_IDX = 1, 3
+
+CONFIG = load_config()
+
+FS = CONFIG["windows"]["fs"]
+N_CHANNELS = CONFIG["windows"]["n_channels"]
+WINDOW_STEP = CONFIG["windows"]["step"]
+WINDOW_SIZE = CONFIG["windows"]["size"]
+C3_IDX = CONFIG["windows"]["C3_IDX"]
+C4_IDX = CONFIG["windows"]["C4_IDX"]
 
 
 def publish_online_features(stop_event, simulation):
@@ -93,6 +108,10 @@ def publish_online_features(stop_event, simulation):
     # initiate online filter
     online_filter = OnlineBandpass(fs, 8, 30, N_CHANNELS)
 
+    LOG_DIR.mkdir(exist_ok=True)    # make the log dir if not already there
+    # make a log with the timestamp
+    logger = FeatureLogger(LOG_DIR / f"features_{time.strftime('%Y%m%d_%H%M%S')}.csv")
+
     try:
         while not stop_event.is_set():
 
@@ -129,10 +148,12 @@ def publish_online_features(stop_event, simulation):
                 )
                 # uncomment for debugging
                 # print("Published features:", log_features, flush=True)
+                logger.log(log_features, timestamp)
     # If anything errors or the recording is finished, 
     # close the inlet to stop receiving EEG.
     finally:
         inlet.close_stream()
+        logger.close()
 
 if __name__ == "__main__":
     import threading

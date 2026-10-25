@@ -31,9 +31,8 @@ def online_classification(stop_event, config, cal_clf):
 
     try:
         while not stop_event.is_set():
-            t0 = time.time()
             feature, _ = inlet.pull_sample()
-
+            t0 = time.perf_counter()
             # y = cal_model.predict(feature)
             probs = cal_model.pred_probability(feature)
             #print(probs)
@@ -46,8 +45,8 @@ def online_classification(stop_event, config, cal_clf):
                 metrics.log_latency(t0)
                 # print("Prediction:", y,
                     # "Mean latency:", metrics.mean_latency())
-
     finally:
+        metrics.save()
         inlet.close_stream()
 
 

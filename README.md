@@ -11,3 +11,20 @@ To run with the Unicorn, make sure the headset is paired, via the Unicorn progra
 
 ## Changing/inspecting the setup
 Many variables are managed in the ``config.yaml`` file, including paradigm timing and stream names. 
+
+## File structure
+
+### Root
+The root folder contains the experiment (``paradigm_F``), as well as requirements.txt, config.yaml, and other configuration files such as an lsl configuration file to disable a warning, and .gitignore.
+
+### src
+Src folder contains the code that the paradigm imports. 
+
+### data
+Data folder contains both the recorded XDF files, and the output of processing the XDF files into csv's where feature value and timestamp are annotated.
+
+### examples
+Examples folder contains some standalone examples, but what is relevant for the pipeline has also been implemented in the src folder. So, the examples folder can be disregarded. 
+
+### logs
+Currently, logs are being recorded for the features that are being streamed, and for the time difference after a sample has been pulled and an online classification has been made (--> pure classification time).

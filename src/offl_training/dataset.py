@@ -34,15 +34,27 @@ from src.onl_preprocessing.filters import OnlineBandpass
 import pandas as pd
 import os
 from pathlib import Path
+import yaml
 
 
-FS = 250
-N_CHANNELS = 8
-WINDOW_STEP = 25
-WINDOW_SIZE = 250
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+LOG_DIR = PROJECT_ROOT / "logs"
 
-# C3 C4 channels
-C3_IDX, C4_IDX = 1, 3
+
+def load_config(name="config.yaml"):
+    with open(PROJECT_ROOT / name, "r") as f:
+        return yaml.safe_load(f)
+
+
+CONFIG = load_config()
+
+FS = CONFIG["windows"]["fs"]
+N_CHANNELS = CONFIG["windows"]["n_channels"]
+WINDOW_STEP = CONFIG["windows"]["step"]
+WINDOW_SIZE = CONFIG["windows"]["size"]
+C3_IDX = CONFIG["windows"]["C3_IDX"]
+C4_IDX = CONFIG["windows"]["C4_IDX"]
+
 
 def extract_offline_features(in_path, out_path):
     """
@@ -151,7 +163,7 @@ def extract_y_labels(csv_path, in_path):
     of function extract_offline_features out_path.
     """
 
-    project_root = Path(__file__).resolve().parent.parent.parent
+    project_root = Path(__file__).resolve().parents[2]
     csv_path = project_root / csv_path
     in_path = project_root / in_path
     #print(csv_path)
