@@ -39,7 +39,7 @@ from pathlib import Path
 FS = 250
 N_CHANNELS = 8
 WINDOW_STEP = 25
-WINDOW_SIZE = 125
+WINDOW_SIZE = 250
 
 # C3 C4 channels
 C3_IDX, C4_IDX = 1, 3

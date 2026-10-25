@@ -19,7 +19,7 @@ from src.onl_preprocessing.filters import OnlineBandpass
 FS = 250
 N_CHANNELS = 8
 WINDOW_STEP = 25
-WINDOW_SIZE = 125
+WINDOW_SIZE = 250
 
 C3_IDX, C4_IDX = 1, 3
 
