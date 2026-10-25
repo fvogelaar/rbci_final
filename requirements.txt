@@ -5,3 +5,5 @@ scikit-learn
 pyxdf
 pandas
 pyyaml
+seaborn
+matplotlib

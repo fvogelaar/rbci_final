@@ -12,7 +12,6 @@ def online_classification(stop_event, config, cal_clf):
     streams = resolve_stream("type", stream_settings["features"]["type"])
     inlet = StreamInlet(streams[0])
 
-    # create outlet for BCI_PREDICTION probabilities
     prediction_info = StreamInfo(
         name=stream_settings["predictions"]["name"],
         type=stream_settings["predictions"]["type"],
@@ -24,26 +23,26 @@ def online_classification(stop_event, config, cal_clf):
 
     prediction_outlet = StreamOutlet(prediction_info)
     cal_model = cal_clf
-    # this runs the offline training with calibration file
-    # cal_model = offline_trainer()
-    metrics = OnlineMetrics()
+    metrics = OnlineMetrics(prefix="latency_ml")
 
     try:
         while not stop_event.is_set():
-            feature, _ = inlet.pull_sample()
+            # Catch the LSL timestamp
+            feature, timestamp = inlet.pull_sample()
+            
+            if feature is None:
+                continue
+                
             t0 = time.perf_counter()
-            # y = cal_model.predict(feature)
             probs = cal_model.pred_probability(feature)
-            # print(probs)
-            # feed P(L) into stream
             y = probs[0]
-            # print(y)
-            prediction_outlet.push_sample([y])
+            
+            # Push original timestamp forward to the feedback loop
+            prediction_outlet.push_sample([y], timestamp)
 
             if y is not None:
-                metrics.log_latency(t0)
-                # print("Prediction:", y,
-                #    "Mean latency:", metrics.mean_latency())
+                metrics.log_latency(timestamp, t0)
+                
     finally:
         metrics.save()
         inlet.close_stream()
