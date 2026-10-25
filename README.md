@@ -1,25 +1,13 @@
-# bci-online-classification
+# Full realtime BCI pipeline
 
-This repository focuses on deploying machine learning models
-in real-time EEG pipelines.
+Environment: required packages are listed in requirements.txt. With differing versions of LSL, we encountered errors regarding resolving streams, so we specified pylsl==1.16.2, which works with our code.
 
-Key topics:
-- Train offline, infer online
-- Latency-aware prediction
-- Simple models > complex models in real time
+## Running the experiment
+In ``paradigm_F.py``, under ``if __name__ == '__main__':``, uncomment either the function ``simulation()`` or ``unicorn()``.
 
-Models we will use:
-- Linear Discriminant Analysis (LDA)
+To run the paradigm with simulated EEG, you must also run ``python -m simulated_eeg.streamer`` in a separate terminal.
 
-# bci-feedback-loop
+To run with the Unicorn, make sure the headset is paired, via the Unicorn program, and Recorder has been started. To record a new XDF file, you must also start LabRecorder (optional).
 
-This repository implements real-time feedback for BCI systems.
-Feedback timing and stability are critical for learning and control.
-
-Feedback types that we will cover here:
-- Visual bar feedback
-- Continuous control signals
-
-# Simulated EEG stream option
-
-We have laid out this repository so that it works both with real eeg streams from the unicorn unit, but also with the simulated eeg stream produced by streamer.py. To use simulated EEG signals, the simulation argument in line 95 of paradigm_F.py needs to be set to true and simulated_eeg.streamer needs to be run in a seperate terminal window. 
+## Changing/inspecting the setup
+Many variables are managed in the ``config.yaml`` file, including paradigm timing and stream names. 
