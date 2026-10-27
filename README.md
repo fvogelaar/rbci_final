@@ -27,4 +27,8 @@ Data folder contains both the recorded XDF files, and the output of processing t
 Examples folder contains some standalone examples, but what is relevant for the pipeline has also been implemented in the src folder. So, the examples folder can be disregarded. 
 
 ### logs
-Currently, logs are being recorded for the features that are being streamed, and for the time difference after a sample has been pulled and an online classification has been made (--> pure classification time).
+Currently, logs are being recorded for the features that are being streamed, and for the time difference after a sample has been pulled and an online classification has been made (--> pure classification time). Logs of the latency for each of the processing steps (signal acquisition, pre-processing, feature extraction, inference and feedback/control), are also logged in three separate files during each run.
+
+## Profiling
+In order to analyze the profiling data produced by our pipeline there is an additional notebook: "profiling_M.ipynb" that loads the profiling data and performs various analyses over each of the steps. 
+
