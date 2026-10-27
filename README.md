@@ -32,3 +32,7 @@ Currently, logs are being recorded for the features that are being streamed, and
 ## Profiling
 In order to analyze the profiling data produced by our pipeline there is an additional notebook: "profiling_M.ipynb" that loads the profiling data and performs various analyses over each of the steps. 
 
+### Results
+
+We tested the pipeline over 963 frames, and total latency stayed well under the 100 ms threshold needed for real-time feedback. Average end-to-end delay was 41.38 ms, and 99% of all frames finished under 70.83 ms. Processing itself is extremely fast: preprocessing, feature extraction, classification, and PyGame rendering take less than 3 ms combined per frame. Almost 80% of the total delay comes from LSL sample buffering. Rendering stayed stable throughout testing, dropping only 4 frames (0.41%) at a 100 ms target stride.
+
