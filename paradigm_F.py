@@ -44,7 +44,7 @@ def run_motor_imagery_paradigm(outlet, config, total_trials=40):
     random.shuffle(trials_list)
 
     for trial_num, condition in enumerate(trials_list, start=1):
-        print(f"\nTrial {trial_num}/{total_trials} ({condition})")
+        print(f"\nTrial {trial_num}/{total_trials}")
 
         # 1. FIXATION   time = 0
         print("+")
