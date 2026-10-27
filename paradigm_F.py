@@ -29,20 +29,21 @@ def create_marker_outlet(config):
     return StreamOutlet(info)
 
 
-def run_motor_imagery_paradigm(outlet, config, total_trials=1):
-
+def run_motor_imagery_paradigm(outlet, config, total_trials=40):
     timing = config["timing"]
     beep = config["beep"]
     experiment = config["experiment"]
     iti_min, iti_max = timing["iti_range_seconds"]
 
-    for trial_num in range(1, total_trials + 1):
-        print(f"\nTrial {trial_num}/{total_trials}")
+    conditions = experiment["conditions"]
+    n_cond = len(conditions)
 
-        # Randomly select task condition
-        condition = random.choice(experiment["conditions"])
-        # You can also include additional markers
-        # Adjust the timings.
+    # Construct a balanced condition list and shuffle
+    trials_list = (conditions * ((total_trials + n_cond - 1) // n_cond))[:total_trials]
+    random.shuffle(trials_list)
+
+    for trial_num, condition in enumerate(trials_list, start=1):
+        print(f"\nTrial {trial_num}/{total_trials} ({condition})")
 
         # 1. FIXATION   time = 0
         print("+")
@@ -53,9 +54,8 @@ def run_motor_imagery_paradigm(outlet, config, total_trials=1):
         time.sleep(timing["post_beep_seconds"])
 
         # 3. CUE + Marker   time = 2.5
-        # prediction should be made within ~1.25 s of cue
         outlet.push_sample([f"CUE_{condition}"])
-        if condition == 'LEFT':
+        if condition == "LEFT":
             print("<--")
         else:
             print("-->")
@@ -64,7 +64,6 @@ def run_motor_imagery_paradigm(outlet, config, total_trials=1):
         # 4. IMAGERY + Marker   time = 3.5
         outlet.push_sample([f"IMAGERY_{condition}"])
         time.sleep(timing["imagery_seconds"])
-        # ~1.25 s after cue is point for presenting feedback
 
         # 5. INTER-TRIAL INTERVAL (ITI)     time = 8
         print("Rest")
@@ -210,4 +209,4 @@ def unicorn(num_trials):
 if __name__ == '__main__':
     cal_clf = offline_trainer()
     simulation(num_trials=25)
-    # unicorn(num_trials=100)
+    #unicorn(num_trials=10)
