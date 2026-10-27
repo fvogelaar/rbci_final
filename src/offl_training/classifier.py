@@ -56,4 +56,5 @@ class OnlineLDA:
         print(f"Cross-Validation Scores ({n_splits}-Fold): {scores}")
         print(f"Mean Accuracy: {scores.mean():.4f} (± {scores.std() * 2:.4f})")
 
+        print(f"Balance analysis train set: left labels: {(y == 'LEFT').sum()}, right labels: {(y == 'RIGHT').sum()}")
         return scores

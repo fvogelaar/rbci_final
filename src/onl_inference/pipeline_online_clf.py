@@ -35,6 +35,7 @@ def online_classification(stop_event, config, cal_clf):
                 
             t0 = time.perf_counter()
             probs = cal_model.pred_probability(feature)
+            # print(probs)
             y = probs[0]
             
             # Push original timestamp forward to the feedback loop

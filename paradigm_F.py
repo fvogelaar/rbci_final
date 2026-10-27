@@ -7,6 +7,7 @@ from src.offl_training.train_offline import offline_trainer
 from src.onl_inference.feature_publisher_F import publish_online_features
 from src.feedback_control.pipeline_feedback import closed_loop_fb
 from src.onl_inference.pipeline_online_clf import online_classification
+from src.feedback_control.controller import reset_event
 from pathlib import Path
 import yaml
 
@@ -69,7 +70,9 @@ def run_motor_imagery_paradigm(outlet, config, total_trials=40):
         print("Rest")
         iti_seconds = random.uniform(iti_min, iti_max)
         time.sleep(iti_seconds)
+        reset_event.set()   # addition after presentation: reset for each trial
         # time = 8.5 - 10.5 s
+
 
 
 def simulation(num_trials):
@@ -83,7 +86,7 @@ def simulation(num_trials):
     print("LSL Marker Outlet initialized: 'MotorImageryMarkers'")
 
     # Linking to LabRecorder
-    print("Run python -m simulated_eeg.streamer in a dedicated terminal")
+    print("Run python -m simulated_eeg.streamer in a dedicated terminal ")
 
     input(
         "\n--> Press ENTER in this terminal"
@@ -208,5 +211,5 @@ def unicorn(num_trials):
 
 if __name__ == '__main__':
     cal_clf = offline_trainer()
-    simulation(num_trials=25)
+    simulation(num_trials=4)
     #unicorn(num_trials=10)

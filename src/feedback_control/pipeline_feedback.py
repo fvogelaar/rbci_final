@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from pylsl import StreamInlet, resolve_stream, local_clock
 from src.feedback_control.feedback import VisualBar
-from src.feedback_control.controller import Controller
+from src.feedback_control.controller import Controller, reset_event
 from src.features.log import FeedbackLatencyLogger
 import pygame
 
@@ -37,6 +37,14 @@ def closed_loop_fb(stop_event):
 
             if stop_event.is_set():
                 break
+
+            if reset_event.is_set():
+                controller.reset()
+                latest_y = None
+                latest_timestamp = None
+                reset_event.clear()
+                while inlet.pull_sample(timeout=0.0)[0] is not None:
+                    pass
 
             while True:
                 pred, timestamp = inlet.pull_sample(timeout=0.0)

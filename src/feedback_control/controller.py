@@ -2,10 +2,17 @@
 Maps classifier outputs to control signals
 """
 
+import threading
+
+reset_event = threading.Event()
+
 
 class Controller:
     def __init__(self, smoothing=0.9):
-        self.state = 0.5
+        # Updated after presentation: initial state should be middle (0),
+        # As the visual bar is mapped from -1 to 1 (target state).
+        self.start = 0
+        self.state = self.start
         self.alpha = smoothing
 
     def update(self, prediction):
@@ -24,3 +31,6 @@ class Controller:
         self.state = self.alpha * self.state + (1 - self.alpha) * target
 
         return self.state
+
+    def reset(self):
+        self.state = self.start
